@@ -1,7 +1,7 @@
 // Converts array of strings into object of symbols
 module.exports.symbols = arr =>
     arr.reduce((o, i) => {
-        o[i] = Symbol(o);
+        o[i] = Symbol(i);
 
         return o;
     }, {});
