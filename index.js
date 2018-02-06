@@ -16,3 +16,38 @@ module.exports.requireKeys = (arr, obj) => {
         }
     });
 };
+
+const log = (type, object, ...rest) => {
+    let icon = 'ℹ️';
+    let obj = object ? `.${object}` : '';
+    let color = 'magenta';
+
+    switch (type) {
+        case 'error':
+            icon = '❌';
+            color = 'red';
+            break;
+        case 'success':
+            icon = '✅';
+            color = 'green';
+            break;
+        case 'info':
+            icon = 'ℹ️';
+            color = 'blue';
+            break;
+    }
+
+    console.log(
+        icon,
+        ` Origami${obj}:`[color],
+        ...rest
+    );
+}
+
+module.exports.success = (...message) => log('success', ...message);
+module.exports.info = (...message) => log('info', ...message);
+module.exports.log = (...message) => log('log', ...message);
+module.exports.error = (objOrError, error) => {
+    if (objOrError.message) log('error', objOrError.message.red);
+    else log('error', objOrError, error.message.red);
+}
