@@ -30,6 +30,7 @@ module.exports = {
     node: {
         fs: "empty"
     },
+    target: 'node',
     plugins: [
         new BitBarPlugin()
     ]
