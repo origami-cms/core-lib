@@ -2,7 +2,7 @@
   "name": "origami-core-lib",
   "version": "0.1.0",
   "description": "Core library for Origami CMS",
-  "main": "index.js",
+  "main": "_bundles/index.js",
   "repository": "https://github.com/origami-cms/core-lib",
   "author": "Tristan Matthias <hello@tristanmatthias.com>",
   "license": "MIT",
