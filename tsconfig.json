@@ -1,0 +1,23 @@
+{
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [],
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "es2015",
+        "lib": [
+            "es5",
+            "es6",
+            "es2015.promise",
+            "es2016.array.include"
+        ],
+        "declaration": true,
+        "sourceMap": true,
+        "outDir": "lib",
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    }
+}
