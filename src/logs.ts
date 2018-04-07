@@ -3,6 +3,7 @@ import {Color} from 'colors';
 
 export type LogType = 'log' | 'error' | 'success' | 'info';
 
+
 const _log = (type: LogType, object: string, ...rest: any[]) => {
     let icon = 'ℹ️';
     const obj = object ? `.${object}` : '';
@@ -30,10 +31,12 @@ const _log = (type: LogType, object: string, ...rest: any[]) => {
     );
 };
 
+
 export const success = (object: string, ...message: any[]) => _log('success', object, ...message);
 export const info = (object: string, ...message: any[]) => _log('info', object, ...message);
 export const log = (object: string, ...message: any[]) => _log('log', object, ...message);
-export const error = (objOrError: Error | string, error: Error) => {
+export const error = (objOrError: Error | string, error?: Error | string) => {
     if (objOrError instanceof Error) _log('error', objOrError.message.red);
-    else _log('error', objOrError, error.message.red);
+    else if (error instanceof Error) _log('error', objOrError, error.message.red);
+    else if (error) _log('error', objOrError, error.red);
 };

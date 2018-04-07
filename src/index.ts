@@ -1,3 +1,4 @@
+export {Origami, PackageJson} from './types';
 export * from './logs';
 export * from './utility';
 export {default as random} from './random-hex';

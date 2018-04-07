@@ -3,11 +3,11 @@ import {promisify} from 'util';
 import path from 'path';
 const fsReadFile = promisify(readFile);
 const fsWriteFile = promisify(writeFile);
-import {PackageJson} from 'origami-cms';
+import {PackageJson} from './types';
 import deepmerge from 'deepmerge';
 
 
-const PKG_FILE = (): string => path.resolve(process.env.CLI_CWD || './', 'package.json');
+const PKG_FILE = (): string => path.resolve(process.env.CLI_CWD || process.cwd(), 'package.json');
 
 
 export namespace pkgjson {
@@ -17,11 +17,17 @@ export namespace pkgjson {
      * or loaded correctly
     */
     export const read = async (): Promise<PackageJson | Boolean> => {
-        try {
-            return require(PKG_FILE());
-        } catch (e) {
-            return false;
-        }
+        return new Promise((res, rej) => {
+
+            fsReadFile(PKG_FILE())
+                .catch(e => {
+                    res(false);
+                })
+                .then(json => {
+                    if (json) res(json.toJSON());
+                    else return false;
+                });
+        });
     };
 
 

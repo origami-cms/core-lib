@@ -17,11 +17,11 @@
   "devDependencies": {
     "@types/colors": "^1.2.1",
     "@types/deepmerge": "^2.1.0",
+    "@types/express": "^4.11.1",
     "@types/node": "^9.6.1",
     "bitbar-webpack-progress-plugin": "^1.0.0",
     "custom-tslint-formatters": "^2.3.0",
     "deepmerge": "^2.1.0",
-    "origami-cms": "^0.0.6",
     "release-it": "^7.3.0",
     "ts-loader": "^4.1.0",
     "tslint": "^5.9.1",

@@ -1,7 +1,8 @@
 import {readFile, writeFile} from 'fs';
 import {promisify} from 'util';
 import path from 'path';
-import {Origami} from 'origami-cms';
+import {Origami} from './types';
+import {requireKeys, error} from '.';
 
 const fsReadFile = promisify(readFile);
 const fsWriteFile = promisify(writeFile);
@@ -38,4 +39,32 @@ export namespace config {
             JSON.stringify(file, null, TAB_SIZE)
         );
     };
+
+    export const validate = (config: Origami.Config) => {
+        try {
+            requireKeys([
+                'store'
+            ], config);
+        } catch (e) {
+            return error(new Error(`Origami: Missing '${e.key}' setting`));
+        }
+
+
+        // ------------------------------------------------------ Validate store
+        const store = `origami-store-${config.store.type}`;
+        try {
+            require(path.resolve(process.cwd(), 'node_modules', store));
+        } catch (e) {
+            if (e.name === 'Error') {
+                return error(
+                    new Error(
+                        `Origami: Could not find store plugin '${store}'. Try running 'yarn install ${store}'`
+                    )
+                );
+            }
+
+            return error(e);
+        }
+    };
+
 }

@@ -1,0 +1,145 @@
+import express from 'express';
+
+export namespace Origami {
+    export interface Config {
+        /** Settings for the overall project */
+        'app': ConfigApp;
+        /** Settings for the store/database */
+        'store': ConfigStore;
+        /** Settings for the theme */
+        'theme': ConfigTheme;
+        /** Settings for the server setup */
+        'server': ConfigServer;
+        /** Admin node module */
+        'admin': string;
+    }
+
+
+    export interface ConfigApp {
+        /** Name of the project */
+        'name': string;
+    }
+
+
+    export interface ConfigStore {
+        /** Store/Database type to integrate with */
+        'type': string;
+        /** Store/Database hostname to connect with */
+        'host': string;
+        /** Store/Database port to connect with */
+        'port': number;
+        /** Store/Database db name to connect with */
+        'database': string;
+        /** Store/Database username to connect with */
+        'username': string;
+        /** Store/Database password to connect with */
+        'password': string;
+    }
+
+    export interface ConfigTheme {
+        /** Theme name to run */
+        'name': string;
+    }
+
+    export interface ConfigServer {
+        /** Secret code to encrypt data and authentication tokens with */
+        'secret': string;
+        /** Port number to run the server on */
+        'port': number;
+        /** Server language */
+        'ln': string;
+    }
+
+
+
+    /**
+     * Valid types of Origami modules to install via NPM
+     * @example origami-theme-snow, origami-store-mongodb, origami-plugin-facebook
+     */
+    export type ModuleType = 'theme' | 'store' | 'plugin' | 'admin';
+
+
+
+
+    export namespace Server {
+
+        export type Position = 'init' | 'pre-store' | 'store' | 'post-store' |
+            'pre-render' | 'render' | 'post-render' | 'pre-send';
+
+        export type URL = string | null | RegExp;
+
+        export type Method = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' |
+            'CONNECT' | 'OPTIONS' | 'PATCH' | 'USE';
+
+        export interface Config {
+            /** Secret code to encrypt data and authentication tokens with */
+            'secret': string;
+            /** Port number to run the server on */
+            'port': number;
+            /** Server language */
+            'ln': string;
+        }
+
+        export interface RequestHandler {
+            (req: Request, res: Response, next: express.NextFunction): any;
+        }
+
+        export interface Request extends express.Request {
+            jwt: {
+                token: string,
+                data: {
+                    userId: string;
+                    email: string;
+                }
+            };
+            __initialPassword?: string;
+        }
+
+        export interface Response extends express.Response {
+            data?: object;
+            body?: string;
+            text?: string;
+            responseCode?: string;
+            error: string;
+            isPage: boolean;
+            pageType: string | undefined;
+        }
+
+        export interface NextFunction extends express.NextFunction {}
+
+        export interface DataError extends Error {
+            data: object;
+        }
+    }
+
+
+
+
+    export namespace Theme {
+        export interface Config {
+            /** Theme name to run */
+            name: string;
+            paths?: {
+                styles?: string
+                views?: string
+                content?: string
+            };
+        }
+    }
+}
+
+
+
+
+export interface PackageJson {
+    'name'?: string;
+    'dependencies'?: {
+        [pkg: string]: string
+    };
+    'devDependencies'?: {
+        [pkg: string]: string
+    };
+    'scripts'?: {
+        [name: string]: string
+    };
+}
