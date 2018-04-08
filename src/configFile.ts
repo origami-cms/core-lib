@@ -17,7 +17,7 @@ export namespace config {
      * @returns {Origami.Config|Boolean} The Origami file as json, or false if it cannot be
      * found or loaded correctly
     */
-    export const read = async (): Promise<Origami.Config | Boolean> => {
+    export const read = async (): Promise<Origami.Config | false> => {
         try {
             return JSON.parse(
                 (await fsReadFile(CONFIG_FILE())).toString()

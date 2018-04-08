@@ -126,6 +126,60 @@ export namespace Origami {
             };
         }
     }
+
+
+    export namespace Store {
+        export declare const Store: {
+            new(options: StoreOptions): Store;
+        };
+        export interface Store {
+
+            models: { [name: string]: Model };
+            connURI: string;
+
+
+
+            connect(): Promise<any>;
+            model(name: string, schema?: Schema): Model | void;
+        }
+
+        export interface StoreOptions {
+            username: string;
+            password: string;
+            host: string;
+            port: number;
+            database: string;
+        }
+
+
+        export interface Schema {
+            tree: boolean;
+            properties: {
+                [key: string]: any;
+            };
+        }
+
+
+        export declare const Model: {
+            new(name: string, schema: Origami.Store.Schema): Model;
+        };
+        export interface Model {
+            create(resource: Origami.Store.Resource): Origami.Store.Resource;
+
+            find(query: object, opts?: object):
+                Promise<Resource | Resource[] | null>;
+        }
+
+
+        export interface Resource {
+            id?: string;
+            deletedAt?: Date | null;
+            children?: Resource[];
+
+            [key: string]: any;
+        }
+
+    }
 }
 
 
