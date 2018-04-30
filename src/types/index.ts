@@ -7,7 +7,7 @@ export namespace Origami {
         /** Settings for the store/database */
         'store': ConfigStore;
         /** Settings for the theme */
-        'theme': ConfigTheme;
+        'theme'?: ConfigTheme;
         /** Settings for the server setup */
         'server': ConfigServer;
         /** Admin node module */
@@ -38,7 +38,8 @@ export namespace Origami {
 
     export interface ConfigTheme {
         /** Theme name to run */
-        'name': string;
+        'name'?: string;
+        'path'?: string;
     }
 
     export interface ConfigServer {
