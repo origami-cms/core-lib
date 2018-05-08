@@ -49,6 +49,8 @@ export namespace Origami {
         'port': number;
         /** Server language */
         'ln': string;
+        /** Static directories to serve */
+        'static'?: string | string[];
     }
 
 
