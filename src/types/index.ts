@@ -12,6 +12,10 @@ export namespace Origami {
         'server': ConfigServer;
         /** Admin node module */
         'admin': string;
+        /** Model/Controller resources to automatically create */
+        'resources': {
+            [name: string]: Resource | string
+        };
     }
 
 
@@ -51,6 +55,14 @@ export namespace Origami {
         'ln': string;
         /** Static directories to serve */
         'static'?: string | string[];
+    }
+
+
+    export interface Resource {
+        model: string;
+        auth?: boolean | {
+            [key in 'get' | 'head' | 'post' | 'put' | 'delete' | 'list']: boolean
+        };
     }
 
 
