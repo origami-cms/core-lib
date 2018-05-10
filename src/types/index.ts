@@ -13,8 +13,12 @@ export namespace Origami {
         /** Admin node module */
         'admin': string;
         /** Model/Controller resources to automatically create */
-        'resources': {
+        'resources'?: {
             [name: string]: Resource | string
+        };
+        /** Plugins to integrate into Origami */
+        'plugins'?: {
+            [name: string]: boolean | object
         };
     }
 
