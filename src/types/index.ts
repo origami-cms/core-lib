@@ -115,7 +115,7 @@ export namespace Origami {
         }
 
         export interface Response extends express.Response {
-            data?: object | object[];
+            data?: object | any[];
             body?: string;
             text?: string;
             responseCode?: string;
