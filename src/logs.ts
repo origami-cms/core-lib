@@ -15,10 +15,12 @@ const _log = (type: LogType, object: string, ...rest: any[]) => {
             color = 'red';
             break;
         case 'success':
+            if (!process.env.LOG_VERBOSE) return;
             icon = '✅';
             color = 'green';
             break;
         case 'info':
+            if (!process.env.LOG_VERBOSE) return;
             icon = 'ℹ️';
             color = 'blue';
             break;

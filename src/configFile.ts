@@ -79,21 +79,23 @@ export const validate = (config: Origami.Config) => {
     }
 
 
-        // ------------------------------------------------------ Validate store
-    const store = `origami-store-${config.store.type}`;
-    try {
-        require(path.resolve(process.cwd(), 'node_modules', store));
-    } catch (e) {
-        if (e.name === 'Error') {
-            return error(
-                    new Error(
-                        `Origami: Could not find store plugin '${store}'. Try running 'yarn install ${store}'`
-                    )
-                );
-        }
+    // ------------------------------------------------------ Validate store
+    // const store = `origami-store-${config.store.type}`;
+    // try {
+    //     require(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
+    // } catch (e) {
+    //     if (e.name === 'Error') {
+    //         console.log(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
 
-        return error(e);
-    }
+    //         return error(
+    //                 new Error(
+    //                     `Origami: Could not find store plugin '${store}'. Try running 'yarn install ${store}'`
+    //                 )
+    //             );
+    //     }
+
+    //     return error(e);
+    // }
 };
 
 }
