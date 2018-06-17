@@ -172,7 +172,7 @@ export namespace Origami {
 
 
         export interface Schema {
-            tree: boolean;
+            tree?: boolean;
             properties: {
                 [key: string]: any;
             };
