@@ -11,27 +11,23 @@
     "clean": "rm -rf build",
     "build": "yarn clean && tsc",
     "watch": "tsc -w",
-    "lint": "tslint -s node_modules/custom-tslint-formatters/formatters -t grouped src/**/*.ts --fix",
-    "release": "release-it -n"
+    "lint": "tslint -s node_modules/custom-tslint-formatters/formatters -t grouped src/**/*.ts --fix"
   },
   "devDependencies": {
+    "@types/find-root": "^1.1.1",
     "@types/colors": "^1.2.1",
     "@types/deepmerge": "^2.1.0",
     "@types/dot-object": "^1.5.0",
     "@types/express": "^4.11.1",
     "@types/node": "^9.6.1",
     "custom-tslint-formatters": "^2.3.0",
-    "deepmerge": "^2.1.0",
     "express": "^4.16.3",
-    "release-it": "^7.3.0",
-    "ts-loader": "^4.1.0",
     "tslint": "^5.9.1",
     "tslint-config-origami": "^1.0.0",
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "@types/callsite": "^1.0.30",
-    "@types/find-root": "^1.1.1",
+    "deepmerge": "^2.1.0",
     "dot-object": "^1.7.0",
     "find-root": "^1.1.0",
     "import-from": "^2.1.0"
