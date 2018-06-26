@@ -4,21 +4,32 @@ export namespace Origami {
     export interface Config {
         /** Settings for the overall project */
         'app': ConfigApp;
+
         /** Settings for the store/database */
         'store': ConfigStore;
+
         /** Settings for the theme */
         'theme'?: ConfigTheme;
+
         /** Settings for the server setup */
         'server': ConfigServer;
+
         /** Admin node module */
         'admin': string;
+
         /** Model/Controller resources to automatically create */
         'resources'?: {
-            [name: string]: Resource | string
+            [name: string]: ConfigResource | string
         };
+
         /** Plugins to integrate into Origami */
         'plugins'?: {
             [name: string]: boolean | object
+        };
+
+        /** Add controllers by individual files or directories */
+        'controllers'?: {
+            [path: string]: ConfigController | string
         };
     }
 
@@ -62,13 +73,17 @@ export namespace Origami {
     }
 
 
-    export interface Resource {
+    export interface ConfigResource {
         model: string;
         auth?: boolean | {
             [key in 'get' | 'head' | 'post' | 'put' | 'delete' | 'list']: boolean
         };
     }
 
+    export interface ConfigController {
+        /** Prefix all controllers in this path under a prefix */
+        prefix?: string;
+    }
 
 
     /**
