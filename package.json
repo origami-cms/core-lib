@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "bcrypt": "^2.0.1",
-    "deepmerge": "^2.1.0",
+    "deepmerge": "^2.1.1",
     "dot-object": "^1.7.0",
     "find-root": "^1.1.0",
     "import-from": "^2.1.0",
