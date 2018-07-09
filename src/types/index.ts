@@ -221,7 +221,8 @@ export namespace Origami {
     }
 
 
-    export interface App {
+    export interface AppManifest {
+        name: string;
         icon: {
             type: string;
             color: string;
