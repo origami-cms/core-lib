@@ -31,6 +31,11 @@ export namespace Origami {
         'controllers'?: {
             [path: string]: ConfigController | string
         };
+
+        /** Applications to install into Origami */
+        'apps'?: {
+            [name: string]: boolean | object;
+        };
     }
 
 
@@ -213,6 +218,23 @@ export namespace Origami {
             [key: string]: any;
         }
 
+    }
+
+
+    export interface App {
+        icon: {
+            type: string;
+            color: string;
+        };
+
+        resources?: object[];
+
+        pages: {
+            path: string,
+            element: string,
+            attributes?: {[key: string]: any},
+            properties?: {[key: string]: any}
+        }[];
     }
 }
 
