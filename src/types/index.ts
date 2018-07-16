@@ -230,12 +230,13 @@ export namespace Origami {
 
         resources?: object[];
 
-        pages: {
-            path: string,
-            element: string,
-            attributes?: {[key: string]: any},
-            properties?: {[key: string]: any}
-        }[];
+        pages: AppManifestPage[];
+    }
+
+    export interface AppManifestPage {
+        path: string;
+        page: string;
+        scripts?: string[];
     }
 }
 

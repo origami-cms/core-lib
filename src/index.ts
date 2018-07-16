@@ -5,5 +5,6 @@ export {default as random} from './random-hex';
 export {pkgjson} from './packageFile';
 export {config} from './configFile';
 export {default as requireLib} from './requireLib';
+export {default as resolveLib} from './resolveLib';
 export {auth} from './auth';
 export {default as Route, RouterListItem} from './Route';
