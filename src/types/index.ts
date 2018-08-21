@@ -227,6 +227,7 @@ export namespace Origami {
             type: string;
             color: string;
         };
+        sidemenu?: boolean;
 
         resources?: object[];
 
@@ -234,8 +235,10 @@ export namespace Origami {
     }
 
     export interface AppManifestPage {
+        title: string;
         path: string;
         page: string;
+        icon?: string;
         scripts?: string[];
     }
 }

@@ -1,9 +1,10 @@
-import {readFile, writeFile} from 'fs';
-import {promisify} from 'util';
-import path from 'path';
-import {Origami} from './types';
-import {requireKeys, error} from '.';
 import dot from 'dot-object';
+import {readFile, writeFile} from 'fs';
+import path from 'path';
+import {promisify} from 'util';
+import {error, requireKeys} from '.';
+import Route from './Route';
+import {Origami} from './types';
 
 const fsReadFile = promisify(readFile);
 const fsWriteFile = promisify(writeFile);
@@ -36,6 +37,7 @@ export namespace config {
         return obj;
     };
 
+
     /**
      * Attempt to load the .origami file at the current directory. Overwrites with any ENV variables
      * @returns {Origami.Config|Boolean} The Origami file as json, or false if it cannot be
@@ -61,41 +63,129 @@ export namespace config {
      * Override/write the .origami file
      * @param file JSON config for Origami app to override
      */
-export const write = async(file: Origami.Config): Promise<void> => {
-    const TAB_SIZE = 4;
-    return fsWriteFile(
-            CONFIG_FILE(),
-            JSON.stringify(file, null, TAB_SIZE)
-        );
-};
-
-export const validate = (config: Origami.Config) => {
-    try {
-        requireKeys([
-            'store'
-        ], config);
-    } catch (e) {
-        return error(new Error(`Origami: Missing '${e.key}' setting`));
-    }
+    export const write = async(file: Origami.Config): Promise<void> => {
+        const TAB_SIZE = 4;
+        return fsWriteFile(
+                CONFIG_FILE(),
+                JSON.stringify(file, null, TAB_SIZE)
+            );
+    };
 
 
-    // ------------------------------------------------------ Validate store
-    // const store = `origami-store-${config.store.type}`;
-    // try {
-    //     require(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
-    // } catch (e) {
-    //     if (e.name === 'Error') {
-    //         console.log(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
+    export const validate = (config: Origami.Config) => {
+        try {
+            requireKeys([
+                'store'
+            ], config);
+        } catch (e) {
+            return error(new Error(`Origami: Missing '${e.key}' setting`));
+        }
 
-    //         return error(
-    //                 new Error(
-    //                     `Origami: Could not find store plugin '${store}'. Try running 'yarn install ${store}'`
-    //                 )
-    //             );
-    //     }
 
-    //     return error(e);
-    // }
-};
+        // ------------------------------------------------------ Validate store
+        // const store = `origami-store-${config.store.type}`;
+        // try {
+        //     require(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
+        // } catch (e) {
+        //     if (e.name === 'Error') {
+        //         console.log(path.resolve(process.cwd(), 'node_modules', store, 'package.json'));
 
+        //         return error(
+        //                 new Error(
+        //                     `Origami: Could not find store plugin '${store}'. Try running 'yarn install ${store}'`
+        //                 )
+        //             );
+        //     }
+
+        //     return error(e);
+        // }
+    };
+
+
+
+    // Setup the plugins for the server
+    export const setupPlugins = (
+        config: Origami.Config,
+        server: any,
+        context: string = process.cwd()
+    ) => {
+
+        Object.entries(config.plugins!).forEach(([name, settings]) => {
+            server.plugin(name, settings);
+        });
+    };
+
+
+    // Setup the apps for the server
+    export const setupApps = (
+        config: Origami.Config,
+        server: any
+    ) => {
+
+        Object.entries(config.apps!).forEach(([name, settings]) => {
+            server.application(name, settings);
+        });
+    };
+
+
+    // Setup the resources for the server API
+    export const setupResources = (
+        config: Origami.Config,
+        server: any,
+        context: string = process.cwd()
+    ) => {
+
+        Object.entries(config.resources!).forEach(([name, r]) => {
+            // r is a string to the model
+            if (typeof r === 'string') {
+                const model = require(path.resolve(context, r));
+                const auth = true;
+                server.resource(name, {model, auth});
+
+                // r is a config object
+            } else if (r instanceof Object) {
+                const model = require(path.resolve(context, r.model));
+                const auth = r.auth;
+                server.resource(name, {model, auth});
+            }
+        });
+    };
+
+
+    // Setup the controllers for the server API
+    export const setupControllers = (
+        config: Origami.Config,
+        server: any,
+        context: string = process.cwd()
+    ) => {
+
+        Object.entries(config.controllers!).forEach(async ([_path, c]) => {
+            let config: Origami.ConfigController = {
+                prefix: ''
+            };
+
+            if (typeof c === 'string') {
+                config.prefix = c;
+            } else if (c instanceof Object) {
+                config = {
+                    ...config,
+                    ...c
+                };
+            }
+
+            const route = new Route(config.prefix);
+
+            await route.include(path.resolve(context, _path), config.prefix, true);
+
+            server.useRouter(route);
+        });
+    };
+
+
+    // Load a directory of routes, models, config files, etc, and automatically
+    // add everything into the server (EG: calling useRouter(), resource(), etc)
+    const loadDirectory = (dir: string) => {
+        // TODO:
+        error('Not implemented');
+    };
 }

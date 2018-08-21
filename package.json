@@ -34,6 +34,7 @@
     "dot-object": "^1.7.0",
     "find-root": "^1.1.0",
     "import-from": "^2.1.0",
-    "jsonwebtoken": "^8.3.0"
+    "jsonwebtoken": "^8.3.0",
+    "marked": "^0.3.6"
   }
 }
