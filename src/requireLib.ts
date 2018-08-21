@@ -11,7 +11,7 @@ import findRoot from 'find-root';
 export default async (lib: string, context: string, prefix?: string) => {
     // If trying to load a relative module
     if (lib.startsWith('/')) return require(lib);
-    if (lib.startsWith('.')) return require(path.resolve(process.cwd(), lib));
+    if (lib.startsWith('./')) return require(path.resolve(process.cwd(), lib));
 
     try {
         // Attempt to load module relative to where it's called with opt. prefix

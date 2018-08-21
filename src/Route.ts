@@ -8,10 +8,11 @@ export type Routers = {
 
 export interface RouterListItem {
     path: Origami.Server.URL;
-    handlers: Origami.Server.RequestHandler[];
+    handlers: RouterUseHandler;
     method: Origami.Server.Method;
 }
 
+export type RouterUseHandler = (Origami.Server.RequestHandler | string)[];
 
 export default class Route {
     parent?: Route;
@@ -85,22 +86,22 @@ export default class Route {
 
 
     // Route methods
-    get(...handlers: Origami.Server.RequestHandler[]): this {
+    get(...handlers: RouterUseHandler): this {
         return this._route('GET', ...handlers);
     }
-    post(...handlers: Origami.Server.RequestHandler[]): this {
+    post(...handlers: RouterUseHandler): this {
         return this._route('POST', ...handlers);
     }
-    put(...handlers: Origami.Server.RequestHandler[]): this {
+    put(...handlers: RouterUseHandler): this {
         return this._route('PUT', ...handlers);
     }
-    delete(...handlers: Origami.Server.RequestHandler[]): this {
+    delete(...handlers: RouterUseHandler): this {
         return this._route('DELETE', ...handlers);
     }
-    all(...handlers: Origami.Server.RequestHandler[]): this {
+    all(...handlers: RouterUseHandler): this {
         return this._route('USE', ...handlers);
     }
-    use(...handlers: Origami.Server.RequestHandler[]): this {
+    use(...handlers: RouterUseHandler): this {
         return this._route('USE', ...handlers);
     }
 
@@ -156,11 +157,11 @@ export default class Route {
     // Registers the activeRouter (set by position()) to handle on the url
     private _route(
         method: Origami.Server.Method,
-        ...handlers: Origami.Server.RequestHandler[]
+        ...handlersOrNamedMW: RouterUseHandler
     ): this {
         this._activeRouter.push({
             path: this.url,
-            handlers,
+            handlers: handlersOrNamedMW,
             method
         });
 
