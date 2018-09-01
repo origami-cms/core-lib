@@ -1,6 +1,6 @@
 import dot from 'dot-object';
-import {readFile, writeFile} from 'fs';
-import path from 'path';
+import {readFile, writeFile, stat} from 'fs';
+import path, {join} from 'path';
 import {promisify} from 'util';
 import {error, requireKeys} from '.';
 import Route from './Route';
@@ -8,6 +8,7 @@ import {Origami} from './types';
 
 const fsReadFile = promisify(readFile);
 const fsWriteFile = promisify(writeFile);
+const fsStat = promisify(stat);
 
 
 const CONFIG_FILE = (): string => path.resolve(process.env.CLI_CWD || './', '.origami');
@@ -43,14 +44,36 @@ export namespace config {
      * @returns {Origami.Config|Boolean} The Origami file as json, or false if it cannot be
      * found or loaded correctly
     */
-    export const read = async (): Promise<Origami.Config | false> => {
+    export const read = async (
+        fileOrDirectory?: string
+    ): Promise<Origami.Config | false> => {
+        // If there is no file provided, load the .origami file in the current dir
+        let file = path.join(process.env.CLI_CWD || process.cwd(), '.origami');
+
+        if (fileOrDirectory) {
+            const stats = await fsStat(fileOrDirectory);
+            if (stats.isFile()) file = fileOrDirectory;
+
+            // If a directory is passed, attempt to load the .origami file in the directory
+            // If that's not a file return false
+            if (stats.isDirectory()) {
+                const joined = path.join(fileOrDirectory, '.origami');
+                const fileStats = await fsStat(joined);
+                if (fileStats.isFile()) {
+                    process.env.CLI_CWD = fileOrDirectory;
+                    process.chdir(fileOrDirectory);
+                    file = path.join(process.cwd(), '.origami');
+                }
+                else return false;
+            }
+        }
+
         let c = {} as Origami.Config;
         try {
-            c = JSON.parse(
-                (await fsReadFile(CONFIG_FILE())).toString()
-            );
+            c = JSON.parse((await fsReadFile(file)).toString());
         } catch (e) {
-            return false;
+            console.log('Error parsing .origami file'.red);
+            throw e;
         }
 
         c = env(c) as Origami.Config;
