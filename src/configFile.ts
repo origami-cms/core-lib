@@ -69,8 +69,15 @@ export namespace config {
         }
 
         let c = {} as Origami.Config;
+        let fileString;
         try {
-            c = JSON.parse((await fsReadFile(file)).toString());
+            fileString = (await fsReadFile(file)).toString();
+        } catch {
+            // No .origami file
+            return false;
+        }
+        try {
+            c = JSON.parse(fileString);
         } catch (e) {
             console.log('Error parsing .origami file'.red);
             throw e;
@@ -97,9 +104,9 @@ export namespace config {
 
     export const validate = (config: Origami.Config) => {
         try {
-            requireKeys([
-                'store'
-            ], config);
+            // requireKeys([
+            //     'store'
+            // ], config);
         } catch (e) {
             return error(new Error(`Origami: Missing '${e.key}' setting`));
         }
