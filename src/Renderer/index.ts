@@ -34,7 +34,6 @@ export default class Renderer {
     }
 
 
-
     private _getEngine(ext: string): CompileFunction {
         // Load from cache
         if (ext && this._engineCache[ext]) return this._engineCache[ext];
@@ -50,19 +49,19 @@ export default class Renderer {
 
         let engine: any;
 
+        if (typeof enginePkgName === 'string') {
+            // Attempt to load the package
+            try {
+                engine = enginePkgName
+                    ? require(path.resolve(this.packageDir, enginePkgName))
+                    : false;
 
-        // Attempt to load the package
-        try {
-            engine = enginePkgName
-                ? require(path.resolve(this.packageDir, enginePkgName))
-                : false;
-
-        } catch (e) {
-            throw new Error(
-                `Origami.Renderer: '${enginePkgName}' engine is not installed.`
-            );
+            } catch (e) {
+                throw new Error(
+                    `Origami.Renderer: '${enginePkgName}' engine is not installed.`
+                );
+            }
         }
-
 
         // Wrap the engine in a CompileFunction syntax
         switch (ext) {
@@ -88,11 +87,13 @@ export default class Renderer {
                     )(data);
                 };
 
+
             case 'hbs':
             case 'ejs':
-                return this._engineCache[ext] = async (template: string, data?: object) => engine.compile(
-                    (await fsRead(template)).toString()
-                )(data);
+                return this._engineCache[ext] = async (template: string, data?: object) =>
+                    engine.compile(
+                        (await fsRead(template)).toString()
+                    )(data);
 
 
             case 'scss':
@@ -101,9 +102,9 @@ export default class Renderer {
                     styles: string, options?: object
                 ) => fs.createReadStream(styles).pipe(engine(styles, options));
 
+
             default:
                 return (text: string) => fs.createReadStream(text);
-            // Throw new Error(`Could not render with extension ${name}`);
         }
     }
 }

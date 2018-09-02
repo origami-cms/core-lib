@@ -5,7 +5,6 @@ export default {
     hbs: 'handlebars',
 
     ejs: 'ejs',
-
     vue: false,
     underscore: false,
     nunjucks: false,
@@ -25,7 +24,13 @@ export default {
     mustache: false,
 
 
-
     scss: 'sass-css-stream',
-    sass: 'sass-css-stream'
-} as { [engine: string]: string | false };
+    sass: 'sass-css-stream',
+
+
+    // Render as is
+    html: true,
+    css: true,
+    js: true
+
+} as { [engine: string]: string | boolean };
