@@ -1,6 +1,6 @@
 {
   "name": "origami-core-lib",
-  "version": "0.3.13-alpha.7",
+  "version": "0.3.13",
   "description": "Core library for Origami CMS",
   "main": "build/index.js",
   "repository": "https://github.com/origami-cms/core-lib",
