@@ -6,16 +6,13 @@ export namespace Origami {
         'app': ConfigApp;
 
         /** Settings for the store/database */
-        'store': ConfigStore;
-
-        /** Settings for the theme */
-        'theme'?: ConfigTheme;
+        'store'?: ConfigStore;
 
         /** Settings for the server setup */
         'server': ConfigServer;
 
         /** Admin node module */
-        'admin': string;
+        'admin'?: boolean | string;
 
         /** Model/Controller resources to automatically create */
         'resources'?: {
@@ -98,8 +95,6 @@ export namespace Origami {
     export type ModuleType = 'theme' | 'store' | 'plugin' | 'admin';
 
 
-
-
     export namespace Server {
 
         export type Position = 'init' | 'pre-store' | 'store' | 'post-store' |
@@ -152,8 +147,6 @@ export namespace Origami {
     }
 
 
-
-
     export namespace Theme {
         export interface Config {
             /** Theme name to run */
@@ -175,7 +168,6 @@ export namespace Origami {
 
             models: { [name: string]: Model };
             connURI: string;
-
 
 
             connect(): Promise<any>;
@@ -242,8 +234,6 @@ export namespace Origami {
         scripts?: string[];
     }
 }
-
-
 
 
 export interface PackageJson {
