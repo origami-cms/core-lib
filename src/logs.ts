@@ -1,31 +1,31 @@
 import {Color} from 'colors';
-
+import symbols from 'log-symbols';
 
 export type LogType = 'log' | 'error' | 'success' | 'info' | 'warn';
 
 
 const _log = (type: LogType, object: string, ...rest: any[]) => {
-    let icon = 'ℹ️';
+    let icon = symbols.info;
     const obj = object ? `.${object}` : '';
     let color: keyof String = 'magenta';
 
     switch (type) {
         case 'error':
-            icon = '❌';
+            icon = symbols.error;
             color = 'red';
             break;
         case 'success':
             if (!process.env.LOG_VERBOSE) return;
-            icon = '✅';
+            icon = symbols.success;
             color = 'green';
             break;
         case 'info':
             if (!process.env.LOG_VERBOSE) return;
-            icon = 'ℹ️';
+            icon = symbols.info;
             color = 'blue';
             break;
         case 'warn':
-            icon = '⚠️';
+            icon = symbols.warning;
             color = 'yellow';
             break;
     }
