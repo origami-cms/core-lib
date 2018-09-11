@@ -24,7 +24,6 @@
     "@types/node": "^9.6.1",
     "custom-tslint-formatters": "^2.3.0",
     "express": "^4.16.3",
-    "log-symbols": "^2.2.0",
     "tslint": "^5.9.1",
     "tslint-config-origami": "^1.0.0",
     "typescript": "^2.7.2"
@@ -37,6 +36,7 @@
     "find-root": "^1.1.0",
     "import-from": "^2.1.0",
     "jsonwebtoken": "^8.3.0",
-    "marked": "^0.3.6"
+    "marked": "^0.3.6",
+    "log-symbols": "^2.2.0"
   }
 }
