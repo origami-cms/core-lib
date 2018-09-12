@@ -93,12 +93,12 @@ export namespace config {
      * Override/write the .origami file
      * @param file JSON config for Origami app to override
      */
-    export const write = async(file: Origami.Config): Promise<void> => {
+    export const write = async (file: Origami.Config): Promise<void> => {
         const TAB_SIZE = 4;
         return fsWriteFile(
-                CONFIG_FILE(),
-                JSON.stringify(file, null, TAB_SIZE)
-            );
+            CONFIG_FILE(),
+            JSON.stringify(file, null, TAB_SIZE)
+        );
     };
 
 
@@ -137,24 +137,20 @@ export namespace config {
         config: Origami.Config,
         server: any,
         context: string = process.cwd()
-    ) => {
-
-        Object.entries(config.plugins!).forEach(([name, settings]) => {
-            server.plugin(name, settings, context);
-        });
-    };
+    ) =>
+        Object.entries(config.plugins!).map(([name, settings]) =>
+            server.plugin(name, settings, context)
+        );
 
 
     // Setup the apps for the server
     export const setupApps = (
         config: Origami.Config,
         server: any
-    ) => {
-
-        Object.entries(config.apps!).forEach(([name, settings]) => {
-            server.application(name, settings);
-        });
-    };
+    ) =>
+        Object.entries(config.apps!).map(([name, settings]) =>
+            server.application(name, settings)
+        );
 
 
     // Setup the resources for the server API
@@ -162,23 +158,21 @@ export namespace config {
         config: Origami.Config,
         server: any,
         context: string = process.cwd()
-    ) => {
-
-        Object.entries(config.resources!).forEach(([name, r]) => {
+    ) =>
+        Object.entries(config.resources!).map(([name, r]) => {
             // r is a string to the model
             if (typeof r === 'string') {
                 const model = require(path.resolve(context, r));
                 const auth = true;
-                server.resource(name, {model, auth});
+                return server.resource(name, {model, auth});
 
                 // r is a config object
             } else if (r instanceof Object) {
                 const model = require(path.resolve(context, r.model));
                 const auth = r.auth;
-                server.resource(name, {model, auth});
+                return server.resource(name, {model, auth});
             }
         });
-    };
 
 
     // Setup the controllers for the server API
@@ -186,9 +180,8 @@ export namespace config {
         config: Origami.Config,
         server: any,
         context: string = process.cwd()
-    ) => {
-
-        Object.entries(config.controllers!).forEach(async ([_path, c]) => {
+    ) =>
+        Object.entries(config.controllers!).map(async ([_path, c]) => {
             let config: Origami.ConfigController = {
                 prefix: ''
             };
@@ -208,7 +201,6 @@ export namespace config {
 
             server.useRouter(route);
         });
-    };
 
 
     // Load a directory of routes, models, config files, etc, and automatically
