@@ -132,7 +132,6 @@ export namespace config {
     };
 
 
-
     // Setup the plugins for the server
     export const setupPlugins = (
         config: Origami.Config,
@@ -141,7 +140,7 @@ export namespace config {
     ) => {
 
         Object.entries(config.plugins!).forEach(([name, settings]) => {
-            server.plugin(name, settings);
+            server.plugin(name, settings, context);
         });
     };
 
