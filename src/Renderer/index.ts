@@ -69,7 +69,7 @@ export default class Renderer {
                 return this._engineCache[ext] = async (
                     template: string, data?: object
                 ): Promise<string> => {
-
+                    // TODO: Remove dependency
                     const markdown = require('marked');
                     markdown.setOptions({
                         breaks: true,

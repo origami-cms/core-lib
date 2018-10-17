@@ -19,6 +19,7 @@
     "@types/colors": "^1.2.1",
     "@types/deepmerge": "^2.1.0",
     "@types/dot-object": "^1.5.0",
+    "@types/dotenv": "^4.0.3",
     "@types/find-root": "^1.1.1",
     "@types/jsonwebtoken": "^7.2.7",
     "@types/log-symbols": "^2.0.0",
@@ -36,10 +37,11 @@
     "bcrypt": "^2.0.1",
     "deepmerge": "^2.1.1",
     "dot-object": "^1.7.0",
+    "dotenv": "^6.1.0",
     "find-root": "^1.1.0",
     "import-from": "^2.1.0",
     "jsonwebtoken": "^8.3.0",
-    "marked": "^0.3.6",
-    "log-symbols": "^2.2.0"
+    "log-symbols": "^2.2.0",
+    "marked": "^0.3.6"
   }
 }

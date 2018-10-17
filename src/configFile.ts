@@ -1,8 +1,9 @@
 import dot from 'dot-object';
-import {readFile, writeFile, stat} from 'fs';
-import path, {join} from 'path';
+import dotenv from 'dotenv';
+import {readFile, stat, writeFile} from 'fs';
+import path from 'path';
 import {promisify} from 'util';
-import {error, requireKeys} from '.';
+import {error} from '.';
 import Route from './Route';
 import {Origami} from './types';
 
@@ -21,10 +22,14 @@ export namespace config {
      * @returns {Object} Object of origami environment variables
     */
     export const env = (obj = {}): object => {
+        dotenv.config({
+            path: path.join(process.env.CLI_CWD || process.cwd(), '.env')
+        });
+
         const e = Object.entries(process.env)
-            .filter(([key, value]) => /^origami_.*$/.test(key))
+            .filter(([key, value]) => /^origami_.*$/.test(key.toLowerCase()))
             .map(([key, value]) => [
-                key
+                key.toLowerCase()
                     // Replace _ with .
                     .replace(/_/g, '.')
                     // Remove preceding 'origami.'
@@ -160,15 +165,27 @@ export namespace config {
         context: string = process.cwd()
     ) =>
         Object.entries(config.resources!).map(([name, r]) => {
+            let mPath;
+            let model;
             // r is a string to the model
             if (typeof r === 'string') {
-                const model = require(path.resolve(context, r));
+                mPath = path.resolve(context, r);
+                try {
+                    model = require(mPath);
+                } catch (e) {
+                    return error(new Error(`Could not load resource ${name} at ${mPath}`));
+                }
                 const auth = true;
                 return server.resource(name, {model, auth});
 
                 // r is a config object
             } else if (r instanceof Object) {
-                const model = require(path.resolve(context, r.model));
+                mPath = path.resolve(context, r.model);
+                try {
+                    model = require(mPath);
+                } catch (e) {
+                    return error(new Error(`Could not load resource ${name} at ${mPath}`));
+                }
                 const auth = r.auth;
                 return server.resource(name, {model, auth});
             }
