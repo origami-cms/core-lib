@@ -215,23 +215,21 @@ export namespace Origami {
 
     export interface AppManifest {
         name: string;
-        icon: {
-            type: string;
-            color: string;
+        icon?: string;
+
+
+        admin?: {
+            uriBase?: string;
+            entryElement?: string;
+            entry?: string;
+            entryScripts?: string[];
+            public?: string;
         };
-        sidemenu?: boolean;
+
 
         resources?: object[];
-
-        pages: AppManifestPage[];
-    }
-
-    export interface AppManifestPage {
-        title: string;
-        path: string;
-        page: string;
-        icon?: string;
-        scripts?: string[];
+        plugins?: object[];
+        routes?: object[];
     }
 }
 
