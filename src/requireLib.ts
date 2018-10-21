@@ -9,18 +9,23 @@ import findRoot from 'find-root';
  * process is called
  */
 export default async (lib: string, context: string, prefix?: string) => {
+    let _lib: string = lib;
+
+    // If the local path is aliased, only use the local path
+    if (lib.includes(':')) _lib = lib.split(':')[0];
+
     // If trying to load a relative module
-    if (lib.startsWith('/')) return require(lib);
-    if (lib.startsWith('./')) return require(path.resolve(process.cwd(), lib));
+    if (_lib.startsWith('/')) return require(_lib);
+    if (_lib.startsWith('./')) return require(path.resolve(process.cwd(), _lib));
 
     try {
         // Attempt to load module relative to where it's called with opt. prefix
         // EG: lib: user-profiles, prefix: origami-plugin-
 
-        return await importFrom(findRoot(context), `${prefix}${lib}`);
+        return await importFrom(findRoot(context), `${prefix}${_lib}`);
     } catch (e) {
         // Finally attempt to load it from the project's node_modules with opt. prefix
 
-        return await importFrom(process.cwd(), `${prefix}${lib}`);
+        return await importFrom(process.cwd(), `${prefix}${_lib}`);
     }
 };

@@ -18,16 +18,41 @@ const CONFIG_FILE = (): string => path.resolve(process.env.CLI_CWD || './', '.or
 export namespace config {
 
     /**
-     * Converts origami_x_y envrionment variables to an object
+     * Injects origami_x_y environment variables into a Origami.config and replaces
+     * aliased keys in objects (eg: {'/path/to/plugin.js:myPlugin': true})
      * @returns {Object} Object of origami environment variables
     */
-    export const env = (obj = {}): object => {
+    export const env = (obj: Partial<Origami.Config> = {}): object => {
         dotenv.config({
             path: path.join(process.env.CLI_CWD || process.cwd(), '.env')
         });
 
-        const e = Object.entries(process.env)
+        // A map of aliased files to their alias
+        // EG: '/path/to/plugin.js:myPlugin' => {'myplugin': '/path/to/plugin.js'}
+        const aliases = {
+            plugins: {}
+        };
+
+        // Replace all aliased local paths (eg: '/path/to/plugin:withAlias') to the aliases
+        // Also removes the aliases from the object keys
+        if (obj.plugins) {
+            Object.entries(obj.plugins).forEach(([plugin, options]) => {
+                // If plugin is a file not a module...
+                const res = /^(\.{0,2}?\/.*):([\w-]+)$/.exec(plugin);
+                if (res) {
+                    obj.plugins![res[1]] = options;
+                    aliases.plugins[res[2].toLowerCase()] = res[1];
+                    delete obj.plugins![plugin];
+                }
+            });
+        }
+
+        // Inject process environment variables into config
+        Object.entries(process.env)
+            // Find only env variables prefixed with 'origami'
             .filter(([key, value]) => /^origami_.*$/.test(key.toLowerCase()))
+
+            // Replace '_' with '.' and remove 'origami_'
             .map(([key, value]) => [
                 key.toLowerCase()
                     // Replace _ with .
@@ -36,8 +61,22 @@ export namespace config {
                     .split('.').slice(1).join('.'),
                 value
             ])
+
             .forEach(([key, value]) => {
-                dot.str(key as string, value, obj);
+                let _key = key;
+                let _obj = obj;
+                // If the variable is a plugin setting that is contained in aliases
+                // Then update the config via the filename not the alias
+                const res = /plugins\.([\w-]+)/.exec(key!);
+                if (res && aliases.plugins[res[1]]) {
+                    _key = key!.split('.').slice(2).join('.');
+                    _obj = obj.plugins![aliases.plugins[res[1]]];
+                }
+
+                // Try set the key, however current value may be a boolean or undefined
+                // meaning that deeper keys may throw error. If that's the case,
+                // then set the value to an empty object, and try again
+                dot.str(_key as string, value, _obj);
             });
 
         return obj;
